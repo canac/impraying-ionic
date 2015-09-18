@@ -8,8 +8,15 @@
         <h2 class="request">{{prayer.content}}</h2>
         <p class="timestamp">{{prayer.timestamp | date:'medium'}} (<span am-time-ago="prayer.timestamp"></span>)</p>
       </div>
-      <div class="item item-divider">
-        <a class="button button-assertive" ng-click="destroy()"><span class="ion-trash-b"> Delete</span></a>
+      <div class="item item-text-wrap comments" ng-show="comments.length">
+        <ion-item ng-repeat="comment in comments | orderBy:'timestamp':true" type="item-text-wrap">
+          <h2>{{comment.user}} (<span am-time-ago="comment.timestamp"></span>)</h2>
+          <p>{{comment.content}}</p>
+        </ion-item>
+      </div>
+      <div class="item item-divider row">
+        <a class="button col col-25 button-calm" ng-click="pray()"><span class="ion-heart"> Pray</span></a>
+        <a class="button col col-offset-50 col-25 button-assertive" ng-click="destroy()"><span class="ion-trash-b"> Delete</span></a>
       </div>
     </div>
   </ion-content>
