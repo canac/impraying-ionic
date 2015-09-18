@@ -1,13 +1,15 @@
 <ion-view view-title="Prayer Request">
   <ion-content>
     <div class="card prayer-detail">
-      <div class="item item-text-wrap">
+      <div class="item item-divider">
         <h1>{{prayer.name}}</h1>
+      </div>
+      <div class="item item-text-wrap">
         <h2 class="request">{{prayer.content}}</h2>
-        <div class="padding">
-          <a class="button button-assertive" ng-click="destroy()"><span class="ion-trash-b"> Delete</span></a>
-        </div>
         <p class="timestamp">{{prayer.timestamp | date:'medium'}} (<span am-time-ago="prayer.timestamp"></span>)</p>
+      </div>
+      <div class="item item-divider">
+        <a class="button button-assertive" ng-click="destroy()"><span class="ion-trash-b"> Delete</span></a>
       </div>
     </div>
   </ion-content>
