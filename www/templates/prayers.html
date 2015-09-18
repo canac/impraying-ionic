@@ -4,7 +4,7 @@
       <a class="button button-block button-positive" href="#/prayers/new">New Prayer Request</a>
     </div>
     <ion-list>
-      <ion-item class="item-remove-animate item-icon-right" ng-repeat="prayer in prayers" type="item-text-wrap" href="#/prayers/{{prayer.$id}}">
+      <ion-item class="item-remove-animate item-icon-right" ng-repeat="prayer in prayers | orderBy:'timestamp':true" type="item-text-wrap" href="#/prayers/{{prayer.$id}}">
         <h2>{{prayer.name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
         <p>{{prayer.content}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
