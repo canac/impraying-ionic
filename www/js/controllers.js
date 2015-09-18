@@ -1,4 +1,4 @@
-angular.module('controllers', []).controller('PrayersCtrl', function($scope, Prayers) {
+angular.module('controllers', ['angularMoment']).controller('PrayersCtrl', function($scope, Prayers) {
   $scope.prayers = Prayers;
 }).controller('NewPrayerCtrl', function($scope, $ionicHistory, Prayers) {
   $scope.request = '';
@@ -8,7 +8,7 @@ angular.module('controllers', []).controller('PrayersCtrl', function($scope, Pra
     Prayers.$add({
       name: 'user',
       content: request,
-      timestamp: Date.now(),
+      timestamp: Firebase.ServerValue.TIMESTAMP,
     });
     $ionicHistory.goBack();
   };
