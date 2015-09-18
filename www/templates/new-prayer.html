@@ -1,0 +1,14 @@
+<ion-view view-title="New Prayer Request">
+  <ion-content>
+    <form ng-submit="createPrayer(request)">
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" placeholder="What is your prayer request?" ng-model="request">
+        </label>
+      </div>
+      <div class="padding">
+        <button type="submit" class="button button-block button-positive">Create request</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

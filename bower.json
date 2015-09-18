@@ -1,6 +1,8 @@
 {
   "name": "impraying",
   "devDependencies": {
+    "angularfire": "~1.1.2",
+    "firebase": "~2.2.9",
     "ionic": "driftyco/ionic-bower#1.1.0"
   }
 }
