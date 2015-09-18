@@ -6,7 +6,7 @@ angular.module('controllers', ['angularMoment']).controller('PrayersCtrl', funct
   // Create a new prayer request
   $scope.createPrayer = function() {
     Prayers.$add({
-      name: 'user',
+      user: 'user',
       content: this.request,
       timestamp: Firebase.ServerValue.TIMESTAMP,
     });
