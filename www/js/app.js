@@ -15,10 +15,6 @@ angular.module('impraying', ['ionic', 'firebase', 'controllers', 'services']).ru
     url: '/prayers',
     templateUrl: 'templates/prayers.html',
     controller: 'PrayersCtrl',
-  }).state('new-prayer', {
-    url: '/prayers/new',
-    templateUrl: 'templates/new-prayer.html',
-    controller: 'NewPrayerCtrl',
   }).state('prayer', {
     url: '/prayers/:id',
     templateUrl: 'templates/prayer.html',

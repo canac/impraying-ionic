@@ -1,8 +1,13 @@
 <ion-view view-title="Prayers">
   <ion-content>
-    <div class="padding">
-      <a class="button button-block button-positive" href="#/prayers/new">New Prayer Request</a>
-    </div>
+    <form class="card new-prayer" ng-submit="createPrayer()">
+      <label class="item item-input">
+        <input type="text" placeholder="What is your prayer request?" ng-model="request">
+      </label>
+      <div class="item item-divider" ng-show="request">
+        <button type="submit" class="button button-block button-positive">Create request</button>
+      </div>
+    </form>
     <ion-list>
       <ion-item class="item-remove-animate item-icon-right" ng-repeat="prayer in prayers | orderBy:'timestamp':true" type="item-text-wrap" href="#/prayers/{{prayer.$id}}">
         <h2>{{prayer.name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
