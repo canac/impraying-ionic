@@ -1,0 +1,11 @@
+<ion-view view-title="Prayer Request">
+  <ion-content>
+    <div class="card prayer-detail">
+      <div class="item item-text-wrap">
+        <h1>{{prayer.name}}</h1>
+        <h2 class="request">{{prayer.content}}</h2>
+        <p class="timestamp">{{prayer.timestamp | date:'medium'}} (<span am-time-ago="prayer.timestamp"></span>)</p>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

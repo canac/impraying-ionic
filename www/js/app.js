@@ -19,6 +19,10 @@ angular.module('impraying', ['ionic', 'firebase', 'controllers', 'services']).ru
     url: '/prayers/new',
     templateUrl: 'templates/new-prayer.html',
     controller: 'NewPrayerCtrl',
+  }).state('prayer', {
+    url: '/prayers/:id',
+    templateUrl: 'templates/prayer.html',
+    controller: 'PrayerCtrl',
   });
 
   // Fallback state when no other states are matched
