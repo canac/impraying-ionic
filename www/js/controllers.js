@@ -60,8 +60,12 @@ angular.module('controllers', ['angularMoment']).controller('PrayersCtrl', funct
     $scope.openPrayModal();
   };
 
-  $scope.destroy = function() {
+  $scope.destroyPrayer = function() {
     Prayers.$remove(this.prayer);
     $ionicHistory.goBack();
+  };
+
+  $scope.destroyComment = function(comment) {
+    Comments.$remove(comment);
   };
 });
