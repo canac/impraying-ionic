@@ -2,9 +2,10 @@
   <ion-content>
     <div class="card prayer-detail">
       <div class="item item-divider">
-        <h1>{{prayer.user}}</h1>
+        <h1>{{prayer.user.name}}</h1>
       </div>
-      <div class="item item-text-wrap">
+      <div class="item item-avatar item-text-wrap">
+        <img ng-src="http://graph.facebook.com/{{prayer.user.id}}/picture?width=270&amp;height=270" />
         <h2 class="request">{{prayer.content}}</h2>
         <p class="timestamp">{{prayer.timestamp | date:'medium'}} (<span am-time-ago="prayer.timestamp"></span>)</p>
       </div>
