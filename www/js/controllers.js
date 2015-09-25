@@ -2,47 +2,14 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   // Initalize the Facebook authentication module using LocalStorage instead of the default
   // SessionStorage for the token store to persist logins across sessions
   ngFB.init({ appId: 1641039379506767, tokenStore: window.localStorage });
-}).controller('PrayersCtrl', function($scope, ngFB, Prayers) {
+}).controller('PrayersCtrl', function($scope, Prayers, User) {
   // Initialize the scope variables
   $scope.prayers = Prayers;
   $scope.request = '';
 
-  // Authenticate with Facebook
-  $scope.facebookLogin = function() {
-    ngFB.login(['public_profile']).then(function(response) {
-      $scope.loggedIn = true;
-      loadUser();
-    });
-  };
-
-  $scope.facebookLogout = function() {
-    ngFB.logout().then(function() {
-      $scope.loggedIn = false;
-    });
-  };
-
-  $scope.loggedIn = false;
-  $scope.user = {};
-
-  // Load information about the current user from Facebook
-  var loadUser = function() {
-    return ngFB.api({
-      path: '/me',
-      params: { fields: 'id,name' },
-    }).then(function(user) {
-      $scope.loggedIn = true;
-      $scope.user = user;
-      return user;
-    }).catch(function(error) {
-      $scope.loggedIn = false;
-      $scope.user = {};
-      return error;
-    });
-  };
-
-  loadUser().catch(function() {
-    $scope.facebookLogin();
-  });
+  $scope.user = User.getUser();
+  $scope.facebookLogin = User.login;
+  $scope.facebookLogout = User.logout;
 
   // Create a new prayer request
   $scope.createPrayer = function() {
