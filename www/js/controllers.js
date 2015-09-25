@@ -14,7 +14,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   // Create a new prayer request
   $scope.createPrayer = function() {
     Prayers.$add({
-      user: {
+      author: {
         id: $scope.user.id,
         name: $scope.user.name,
       },
@@ -62,7 +62,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
 
   $scope.addComment = function() {
     Comments.$add({
-      user: {
+      author: {
         id: $scope.user.id,
         name: $scope.user.name,
       },
