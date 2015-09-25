@@ -13,7 +13,7 @@
         <ion-list>
           <ion-item class="item-avatar" ng-repeat="comment in comments | orderBy:'timestamp':true" type="item-text-wrap">
             <img ng-src="http://graph.facebook.com/{{comment.author.id}}/picture" />
-            <a class="button button-assertive icon ion-trash-b pull-right" ng-click="destroyComment(comment)"></a>
+            <a class="button button-assertive icon ion-trash-b pull-right" ng-click="destroyComment(comment)" ng-show="isCurrentUser(comment.author)"></a>
             <h2>{{comment.author.name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
             <p>{{comment.content}}</p>
           </ion-item>
@@ -21,7 +21,7 @@
       </div>
       <div class="item item-divider row">
         <a class="button col col-25 button-calm" ng-click="pray()"><span class="ion-heart"> Pray</span></a>
-        <a class="button col col-offset-50 col-25 button-assertive" ng-click="destroyPrayer()"><span class="ion-trash-b"> Delete</span></a>
+        <a class="button col col-offset-50 col-25 button-assertive" ng-click="destroyPrayer()" ng-show="isCurrentUser(prayer.author)"><span class="ion-trash-b"> Delete</span></a>
       </div>
     </div>
   </ion-content>

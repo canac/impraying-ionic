@@ -84,4 +84,9 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   $scope.destroyComment = function(comment) {
     Comments.$remove(comment);
   };
+
+  // Determine whether or not the provided user is the currently logged in user
+  $scope.isCurrentUser = function(user) {
+    return user.id === $scope.user.id;
+  };
 });
