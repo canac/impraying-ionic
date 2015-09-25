@@ -10,10 +10,18 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   // Authenticate with Facebook
   $scope.facebookLogin = function() {
     ngFB.login(['public_profile']).then(function(response) {
+      $scope.loggedIn = true;
       loadUser();
     });
   };
 
+  $scope.facebookLogout = function() {
+    ngFB.logout().then(function() {
+      $scope.loggedIn = false;
+    });
+  };
+
+  $scope.loggedIn = false;
   $scope.user = {};
 
   // Load information about the current user from Facebook
@@ -22,9 +30,11 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
       path: '/me',
       params: { fields: 'id,name' },
     }).then(function(user) {
+      $scope.loggedIn = true;
       $scope.user = user;
       return user;
     }).catch(function(error) {
+      $scope.loggedIn = false;
       $scope.user = {};
       return error;
     });

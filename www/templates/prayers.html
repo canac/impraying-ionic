@@ -1,6 +1,7 @@
 <ion-view view-title="Prayers">
   <ion-nav-buttons side="right">
-    <button class="button button-positive" ng-click="facebookLogin()"><i class="ion-social-facebook"></i> Login</button>
+    <button class="button button-positive" ng-show="!loggedIn" ng-click="facebookLogin()"><i class="ion-social-facebook"></i> Login</button>
+    <button class="button button-positive" ng-show="loggedIn" ng-click="facebookLogout()"><i class="ion-social-facebook"></i> Logout</button>
   </ion-nav-buttons>
   <ion-content>
     <form class="card new-prayer" ng-submit="createPrayer()">
