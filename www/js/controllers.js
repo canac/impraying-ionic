@@ -2,7 +2,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   // Initalize the Facebook authentication module using LocalStorage instead of the default
   // SessionStorage for the token store to persist logins across sessions
   ngFB.init({ appId: 1641039379506767, tokenStore: window.localStorage });
-}).controller('PrayersCtrl', function($scope, Prayers, User) {
+}).controller('PrayersCtrl', function($scope, Prayers, Users, User) {
   // Initialize the scope variables
   $scope.prayers = Prayers;
   $scope.request = '';
@@ -11,13 +11,15 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   $scope.facebookLogin = User.login;
   $scope.facebookLogout = User.logout;
 
+  // Return a user record based on its id
+  $scope.lookupUser = function(id) {
+    return Users.$getRecord(id);
+  };
+
   // Create a new prayer request
   $scope.createPrayer = function() {
     Prayers.$add({
-      author: {
-        id: $scope.user.id,
-        name: $scope.user.name,
-      },
+      author: $scope.user.id,
       content: this.request,
       timestamp: Firebase.ServerValue.TIMESTAMP,
       comments: {},
@@ -26,7 +28,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     // Clear the request in preparation for creating the next one
     this.request = '';
   };
-}).controller('PrayerCtrl', function($scope, $stateParams, $ionicHistory, $ionicModal, $firebaseArray, Prayers, User) {
+}).controller('PrayerCtrl', function($scope, $stateParams, $ionicHistory, $ionicModal, $firebaseArray, Prayers, Users, User) {
   // Use the id contained in the current state to find the current prayer request
   var prayerId = $stateParams.id;
   $scope.prayer = Prayers.$getRecord(prayerId);
@@ -60,12 +62,14 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     $scope.prayModal.hide();
   };
 
+  // Return a user record based on its id
+  $scope.lookupUser = function(id) {
+    return Users.$getRecord(id);
+  };
+
   $scope.addComment = function() {
     Comments.$add({
-      author: {
-        id: $scope.user.id,
-        name: $scope.user.name,
-      },
+      author: $scope.user.id,
       content: this.comment,
       timestamp: Firebase.ServerValue.TIMESTAMP,
     });
@@ -87,6 +91,6 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
 
   // Determine whether or not the provided user is the currently logged in user
   $scope.isCurrentUser = function(user) {
-    return user.id === $scope.user.id;
+    return user === $scope.user.id;
   };
 });

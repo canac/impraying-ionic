@@ -14,8 +14,8 @@
     </form>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="prayer in prayers | orderBy:'timestamp':true" type="item-text-wrap" href="#/prayers/{{prayer.$id}}">
-        <img ng-src="http://graph.facebook.com/{{prayer.author.id}}/picture" />
-        <h2>{{prayer.author.name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
+        <img ng-src="http://graph.facebook.com/{{prayer.author}}/picture" />
+        <h2>{{lookupUser(prayer.author).name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
         <p>{{prayer.content}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>

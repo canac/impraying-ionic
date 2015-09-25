@@ -2,19 +2,19 @@
   <ion-content>
     <div class="card prayer-detail">
       <div class="item item-divider">
-        <h1>{{prayer.author.name}}</h1>
+        <h1>{{lookupUser(prayer.author).name}}</h1>
       </div>
       <div class="item item-avatar item-text-wrap">
-        <img ng-src="http://graph.facebook.com/{{prayer.author.id}}/picture" />
+        <img ng-src="http://graph.facebook.com/{{prayer.author}}/picture" />
         <h2 class="request">{{prayer.content}}</h2>
         <p class="timestamp">{{prayer.timestamp | date:'medium'}} (<span am-time-ago="prayer.timestamp"></span>)</p>
       </div>
       <div class="item comments" ng-show="comments.length">
         <ion-list>
           <ion-item class="item-avatar" ng-repeat="comment in comments | orderBy:'timestamp':true" type="item-text-wrap">
-            <img ng-src="http://graph.facebook.com/{{comment.author.id}}/picture" />
+            <img ng-src="http://graph.facebook.com/{{comment.author}}/picture" />
             <a class="button button-assertive icon ion-trash-b pull-right" ng-click="destroyComment(comment)" ng-show="isCurrentUser(comment.author)"></a>
-            <h2>{{comment.author.name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
+            <h2>{{lookupUser(comment.author).name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
             <p>{{comment.content}}</p>
           </ion-item>
         </ion-list>

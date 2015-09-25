@@ -1,7 +1,10 @@
 angular.module('services', []).factory('Prayers', function($firebaseArray) {
   var prayersRef = new Firebase('https://im-praying.firebaseio.com/prayers');
   return $firebaseArray(prayersRef);
-}).service('User', function(ngFB) {
+}).factory('Users', function($firebaseArray) {
+  var usersRef = new Firebase('https://im-praying.firebaseio.com/users');
+  return $firebaseArray(usersRef);
+}).service('User', function(ngFB, Users) {
   var User = {};
 
   // Authenticate with Facebook
@@ -39,6 +42,11 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
       currentUser.id = user.id;
       currentUser.name = user.name;
       currentUser.loggedIn = true;
+
+      // Add the user to the Users array or update the existng record
+      Users.$ref().child(user.id).update({
+        name: user.name,
+      });
     }
   };
 
