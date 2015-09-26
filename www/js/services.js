@@ -4,12 +4,18 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
 }).factory('Users', function($firebaseArray) {
   var usersRef = new Firebase('https://im-praying.firebaseio.com/users');
   return $firebaseArray(usersRef);
-}).service('User', function(ngFB, Users) {
+}).factory('Friends', function($firebaseArray) {
+  var friendsRef = new Firebase('https://im-praying.firebaseio.com/friends');
+  return $firebaseArray(friendsRef);
+}).factory('Feeds', function($firebaseArray) {
+  var feedsRef = new Firebase('https://im-praying.firebaseio.com/feeds');
+  return $firebaseArray(feedsRef);
+}).service('User', function(ngFB, $q, Users, Friends) {
   var User = {};
 
   // Authenticate with Facebook
   User.login = function() {
-    ngFB.login(['public_profile']).then(function(response) {
+    ngFB.login({ scope: 'public_profile,user_friends' }).then(function(response) {
       loadProfile();
     });
   };
@@ -42,11 +48,6 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
       currentUser.id = user.id;
       currentUser.name = user.name;
       currentUser.loggedIn = true;
-
-      // Add the user to the Users array or update the existng record
-      Users.$ref().child(user.id).update({
-        name: user.name,
-      });
     }
   };
 
@@ -54,9 +55,26 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
   var loadProfile = function() {
     return ngFB.api({
       path: '/me',
-      params: { fields: 'id,name' },
+      params: { fields: 'id,name,friends{id}' },
     }).then(function(user) {
       setUser(user);
+
+      // Add the user to the Users array or update the existing record
+      Users.$ref().child(user.id).update({
+        name: user.name,
+      });
+
+      if (user.friends) {
+        // Update the list of this user's friends
+        var userFriendsRef = Friends.$ref().child(user.id);
+        var friends = {};
+        user.friends.data.forEach(function(friend) {
+          friends[friend.id] = true;
+        });
+
+        Friends.$ref().child(user.id).set(friends);
+      }
+
       return user;
     }).catch(function(error) {
       setUser(null);
