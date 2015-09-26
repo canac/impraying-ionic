@@ -50,45 +50,21 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   var Comments = $firebaseArray(commentsRef);
   $scope.comments = Comments;
 
-  // Create and load the modal window
-  $ionicModal.fromTemplateUrl(
-    '/templates/pray.html',
-    function(modal) {
-      $scope.prayModal = modal;
-    },
-
-    {
-      scope: $scope,
-      animation: 'slide-in-up',
-    }
-  );
-
-  $scope.openPrayModal = function() {
-    this.comment = '';
-    $scope.prayModal.show();
-  };
-
-  $scope.closePrayModal = function() {
-    $scope.prayModal.hide();
-  };
-
   // Return a user record based on its id
   $scope.lookupUser = function(id) {
     return Users.$getRecord(id);
   };
 
-  $scope.addComment = function() {
+  $scope.createComment = function() {
     Comments.$add({
       author: $scope.user.id,
       content: this.comment,
       timestamp: Firebase.ServerValue.TIMESTAMP,
     });
-    $scope.closePrayModal();
+    this.comment = '';
   };
 
-  $scope.pray = function() {
-    $scope.openPrayModal();
-  };
+  $scope.pray = function() {};
 
   $scope.destroyPrayer = function() {
     // Destroy the prayer itself

@@ -9,7 +9,15 @@
         <h2 class="request">{{prayer.content}}</h2>
         <p class="timestamp">{{prayer.timestamp | date:'medium'}} (<span am-time-ago="prayer.timestamp"></span>)</p>
       </div>
-      <div class="item comments" ng-show="comments.length">
+      <div class="item comments">
+        <form class="card new-prayer" ng-submit="createComment()">
+          <label class="item item-input">
+            <input type="text" placeholder="Add a comment!" ng-model="comment">
+          </label>
+          <div class="item item-divider" ng-show="comment">
+            <button type="submit" class="button button-block button-positive">Create comment</button>
+          </div>
+        </form>
         <ion-list>
           <ion-item class="item-avatar" ng-repeat="comment in comments | orderBy:'timestamp':true" type="item-text-wrap">
             <img ng-src="http://graph.facebook.com/{{comment.author}}/picture" />
