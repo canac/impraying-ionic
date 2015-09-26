@@ -10,7 +10,7 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
 }).factory('Feeds', function($firebaseArray) {
   var feedsRef = new Firebase('https://im-praying.firebaseio.com/feeds');
   return $firebaseArray(feedsRef);
-}).service('User', function(ngFB, $q, Users, Friends) {
+}).service('User', function(ngFB, $q, $firebaseArray, Users, Friends, Feeds) {
   var User = {};
 
   // Authenticate with Facebook
@@ -44,10 +44,14 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
       currentUser.id = null;
       currentUser.name = null;
       currentUser.loggedIn = false;
+      currentUser.feed = [];
     } else {
       currentUser.id = user.id;
       currentUser.name = user.name;
       currentUser.loggedIn = true;
+
+      var feedRef = Feeds.$ref().child(user.id);
+      currentUser.feed = $firebaseArray(feedRef);
     }
   };
 

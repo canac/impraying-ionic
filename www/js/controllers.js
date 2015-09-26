@@ -2,19 +2,12 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   // Initalize the Facebook authentication module using LocalStorage instead of the default
   // SessionStorage for the token store to persist logins across sessions
   ngFB.init({ appId: 1641039379506767, tokenStore: window.localStorage });
-}).controller('PrayersCtrl', function($scope, Prayers, Users, User) {
+}).controller('PrayersCtrl', function($scope, Prayers, Friends, Feeds, User) {
   // Initialize the scope variables
-  $scope.prayers = Prayers;
   $scope.request = '';
-
   $scope.user = User.getUser();
   $scope.facebookLogin = User.login;
   $scope.facebookLogout = User.logout;
-
-  // Return a user record based on its id
-  $scope.lookupUser = function(id) {
-    return Users.$getRecord(id);
-  };
 
   // Create a new prayer request
   $scope.createPrayer = function() {
@@ -23,6 +16,23 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
       content: this.request,
       timestamp: Firebase.ServerValue.TIMESTAMP,
       comments: {},
+    }).then(function(ref) {
+      // This function will add the prayer request to the given user's feed
+      var addToFeed = function(userId) {
+        feedsRootRef.child(userId).child(ref.key()).set(true);
+      };
+
+      // Add the prayer request to all of the user's friends' feeds
+      var feedsRootRef = Feeds.$ref();
+      var friendsRef = Friends.$ref().child($scope.user.id);
+      friendsRef.once('value', function(snap) {
+        snap.forEach(function(friend) {
+          addToFeed(friend.key());
+        });
+      });
+
+      // Add it to the user's own feed
+      addToFeed($scope.user.id);
     });
 
     // Clear the request in preparation for creating the next one
