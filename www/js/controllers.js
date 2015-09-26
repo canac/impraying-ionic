@@ -38,7 +38,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     // Clear the request in preparation for creating the next one
     this.request = '';
   };
-}).controller('PrayerCtrl', function($scope, $stateParams, $ionicHistory, $ionicModal, $firebaseArray, Prayers, Users, User) {
+}).controller('PrayerCtrl', function($scope, $stateParams, $ionicHistory, $ionicModal, $firebaseArray, Prayers, Users, Friends, Feeds, User) {
   // Use the id contained in the current state to find the current prayer request
   var prayerId = $stateParams.id;
   $scope.prayer = Prayers.$getRecord(prayerId);
@@ -91,7 +91,27 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   };
 
   $scope.destroyPrayer = function() {
-    Prayers.$remove(this.prayer);
+    // Destroy the prayer itself
+    var destroyedPrayer = this.prayer;
+    Prayers.$remove(destroyedPrayer);
+
+    // This function will remove the prayer request from the given user's feed
+    var removeFromFeed = function(userId) {
+      feedsRootRef.child(userId).child(destroyedPrayer.$id).remove();
+    };
+
+    // Remove the prayer request from all of the user's friends' feeds
+    var feedsRootRef = Feeds.$ref();
+    var friendsRef = Friends.$ref().child($scope.user.id);
+    friendsRef.once('value', function(snap) {
+      snap.forEach(function(friend) {
+        removeFromFeed(friend.key());
+      });
+    });
+
+    // Remove it remove from the user's own feed
+    removeFromFeed($scope.user.id);
+
     $ionicHistory.goBack();
   };
 
