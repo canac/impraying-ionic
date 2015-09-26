@@ -46,7 +46,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   $scope.user = User.getUser();
 
   // Load the comments array
-  var commentsRef = new Firebase('https://im-praying.firebaseio.com/prayers/' + prayerId + '/comments');
+  var commentsRef = Prayers.$ref().child(prayerId).child('comments');
   var Comments = $firebaseArray(commentsRef);
   $scope.comments = Comments;
 
