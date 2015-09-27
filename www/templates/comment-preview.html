@@ -1,0 +1,6 @@
+<ion-item class="item-avatar item-text-wrap">
+  <img ng-src="http://graph.facebook.com/{{comment.author}}/picture" />
+  <a class="button button-assertive icon ion-trash-b pull-right" ng-click="destroyComment()" ng-show="user.isCurrentUser(comment.author)"></a>
+  <h2>{{author.name}} (<span am-time-ago="comment.timestamp"></span>)</h2>
+  <p>{{comment.content}}</p>
+</ion-item>

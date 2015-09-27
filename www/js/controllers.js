@@ -58,6 +58,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   $scope.createComment = function() {
     Comments.$add({
       author: $scope.user.id,
+      prayer: prayerId,
       content: this.comment,
       timestamp: Firebase.ServerValue.TIMESTAMP,
     });
@@ -89,14 +90,5 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     removeFromFeed($scope.user.id);
 
     $ionicHistory.goBack();
-  };
-
-  $scope.destroyComment = function(comment) {
-    Comments.$remove(comment);
-  };
-
-  // Determine whether or not the provided user is the currently logged in user
-  $scope.isCurrentUser = function(user) {
-    return user === $scope.user.id;
   };
 });

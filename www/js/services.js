@@ -35,7 +35,12 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
   // Represents the currently logged in user
   // The "id" property is the user's Facebook user ID, the "name" property is the user's Facebook
   // name, and the "loggedIn" boolean property is true only if the user is logged in
-  var currentUser = {};
+  var currentUser = {
+    // Determine whether or not the provided user is the currently logged in user
+    isCurrentUser: function(userId) {
+      return userId === currentUser.id;
+    },
+  };
 
   // Set the current user to the provided object which either contains properties for the user's id
   // and name or is null to represent an unlogged in
