@@ -5,7 +5,9 @@ angular.module('directives', []).directive('prayerPreview', function() {
       prayerId: '=prayerId',
     },
     templateUrl: 'templates/prayer-preview.html',
-    controller: function($scope, $firebaseObject, Prayers, Users) {
+    controller: function($scope, $firebaseObject, Prayers, Users, User) {
+      $scope.user = User.getUser();
+
       var prayerRef = Prayers.$ref().child($scope.prayerId);
       $scope.prayer = $firebaseObject(prayerRef);
       prayerRef.once('value', function(snap) {
@@ -13,6 +15,10 @@ angular.module('directives', []).directive('prayerPreview', function() {
         var authorRef = Users.$ref().child(snap.val().author);
         $scope.author = $firebaseObject(authorRef);
       });
+
+      $scope.destroyPrayer = function(prayer) {
+        prayerRef.remove();
+      };
     },
   };
 }).directive('commentPreview', function() {

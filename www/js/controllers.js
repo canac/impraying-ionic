@@ -38,7 +38,30 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     // Clear the request in preparation for creating the next one
     this.request = '';
   };
-}).controller('PrayerCtrl', function($scope, $stateParams, $ionicHistory, $ionicModal, $firebaseArray, $firebaseObject, Prayers, Users, Friends, Feeds, User) {
+
+  // Watch for destroyed prayers
+  var prayersRef = Prayers.$ref();
+  prayersRef.on('child_removed', function(snap) {
+    var prayerId = snap.key();
+
+    // This function will remove the prayer request from the given user's feed
+    var removeFromFeed = function(userId) {
+      feedsRootRef.child(userId).child(prayerId).remove();
+    };
+
+    // Remove the prayer request from all of the user's friends' feeds
+    var feedsRootRef = Feeds.$ref();
+    var friendsRef = Friends.$ref().child($scope.user.id);
+    friendsRef.once('value', function(snap) {
+      snap.forEach(function(friend) {
+        removeFromFeed(friend.key());
+      });
+    });
+
+    // Remove it remove from the user's own feed
+    removeFromFeed($scope.user.id);
+  });
+}).controller('PrayerCtrl', function($scope, $stateParams, $ionicModal, $firebaseArray, $firebaseObject, Prayers, Users, Friends, Feeds, User) {
   // Use the id contained in the current state to find the current prayer request
   var prayerId = $stateParams.id;
   var prayerRef = Prayers.$ref().child(prayerId);
@@ -64,32 +87,5 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
       timestamp: Firebase.ServerValue.TIMESTAMP,
     });
     this.comment = '';
-  };
-
-  $scope.pray = function() {};
-
-  $scope.destroyPrayer = function() {
-    // Destroy the prayer itself
-    var destroyedPrayer = this.prayer;
-    Prayers.$remove(destroyedPrayer);
-
-    // This function will remove the prayer request from the given user's feed
-    var removeFromFeed = function(userId) {
-      feedsRootRef.child(userId).child(destroyedPrayer.$id).remove();
-    };
-
-    // Remove the prayer request from all of the user's friends' feeds
-    var feedsRootRef = Feeds.$ref();
-    var friendsRef = Friends.$ref().child($scope.user.id);
-    friendsRef.once('value', function(snap) {
-      snap.forEach(function(friend) {
-        removeFromFeed(friend.key());
-      });
-    });
-
-    // Remove it remove from the user's own feed
-    removeFromFeed($scope.user.id);
-
-    $ionicHistory.goBack();
   };
 });
