@@ -38,10 +38,16 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     // Clear the request in preparation for creating the next one
     this.request = '';
   };
-}).controller('PrayerCtrl', function($scope, $stateParams, $ionicHistory, $ionicModal, $firebaseArray, Prayers, Users, Friends, Feeds, User) {
+}).controller('PrayerCtrl', function($scope, $stateParams, $ionicHistory, $ionicModal, $firebaseArray, $firebaseObject, Prayers, Users, Friends, Feeds, User) {
   // Use the id contained in the current state to find the current prayer request
   var prayerId = $stateParams.id;
-  $scope.prayer = Prayers.$getRecord(prayerId);
+  var prayerRef = Prayers.$ref().child(prayerId);
+  $scope.prayer = $firebaseObject(prayerRef);
+  prayerRef.once('value', function(snap) {
+    // Look up the prayer's author
+    var authorRef = Users.$ref().child(snap.val().author);
+    $scope.author = $firebaseObject(authorRef);
+  });
 
   $scope.user = User.getUser();
 
@@ -49,11 +55,6 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   var commentsRef = Prayers.$ref().child(prayerId).child('comments');
   var Comments = $firebaseArray(commentsRef);
   $scope.comments = Comments;
-
-  // Return a user record based on its id
-  $scope.lookupUser = function(id) {
-    return Users.$getRecord(id);
-  };
 
   $scope.createComment = function() {
     Comments.$add({

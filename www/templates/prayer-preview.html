@@ -1,6 +1,6 @@
 <ion-item class="item-avatar item-icon-right item-text-wrap" href="#/prayers/{{prayerId}}">
   <img ng-src="http://graph.facebook.com/{{prayer.author}}/picture" />
-  <h2>{{lookupUser(prayer.author).name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
+  <h2>{{author.name}} (<span am-time-ago="prayer.timestamp"></span>)</h2>
   <p>{{prayer.content}}</p>
   <i class="icon ion-chevron-right icon-accessory"></i>
 </ion-item>
