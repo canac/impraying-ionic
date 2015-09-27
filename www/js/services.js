@@ -1,5 +1,40 @@
-angular.module('services', []).factory('Prayers', function($firebaseArray) {
+angular.module('services', []).factory('Prayers', function($firebaseArray, Friends, Feeds) {
   var prayersRef = new Firebase('https://im-praying.firebaseio.com/prayers');
+
+  // Watch for added prayers
+  prayersRef.on('child_added', function(snap) {
+    updateFeeds(snap, function(feedRef) {
+      // Mark the prayer as in this feed
+      feedRef.set(true);
+    });
+  });
+
+  // Watch for destroyed prayers
+  prayersRef.on('child_removed', function(snap) {
+    updateFeeds(snap, function(feedRef) {
+      // Mark the prayer as not in this feed
+      feedRef.remove();
+    });
+  });
+
+  // This generically updates a prayer's status in all of its author's friend's feeds
+  // The callback is called once for every reference to the prayer in any user's feed
+  var updateFeeds = function(prayerSnap, callback) {
+    var prayerId = prayerSnap.key();
+    var authorId = prayerSnap.val().author;
+
+    // Call the callback for the prayer request's entry in all of its author's friends' feeds
+    var feedsRootRef = Feeds.$ref();
+    var friendsRef = Friends.$ref().child(authorId);
+    friendsRef.once('value', function(snap) {
+      snap.forEach(function(friend) {
+        var userId = friend.key();
+        var feedRef = feedsRootRef.child(userId).child(prayerId);
+        callback(feedRef);
+      });
+    });
+  };
+
   return $firebaseArray(prayersRef);
 }).factory('Users', function($firebaseArray) {
   var usersRef = new Firebase('https://im-praying.firebaseio.com/users');

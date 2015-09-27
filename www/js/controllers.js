@@ -16,37 +16,11 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
       content: this.request,
       timestamp: Firebase.ServerValue.TIMESTAMP,
       comments: {},
-    }).then(function(ref) {
-      // Add the prayer request to all of the user's friends' feeds
-      var feedsRootRef = Feeds.$ref();
-      var friendsRef = Friends.$ref().child($scope.user.id);
-      friendsRef.once('value', function(snap) {
-        snap.forEach(function(friend) {
-          var userId = friend.key();
-          feedsRootRef.child(userId).child(ref.key()).set(true);
-        });
-      });
     });
 
     // Clear the request in preparation for creating the next one
     this.request = '';
   };
-
-  // Watch for destroyed prayers
-  var prayersRef = Prayers.$ref();
-  prayersRef.on('child_removed', function(snap) {
-    var prayerId = snap.key();
-
-    // Remove the prayer request from all of the user's friends' feeds
-    var feedsRootRef = Feeds.$ref();
-    var friendsRef = Friends.$ref().child($scope.user.id);
-    friendsRef.once('value', function(snap) {
-      snap.forEach(function(friend) {
-        var userId = friend.key();
-        feedsRootRef.child(userId).child(prayerId).remove();
-      });
-    });
-  });
 }).controller('PrayerCtrl', function($scope, $stateParams, $ionicModal, $firebaseArray, $firebaseObject, Prayers, Users, Friends, Feeds, User) {
   // Use the id contained in the current state to find the current prayer request
   var prayerId = $stateParams.id;
