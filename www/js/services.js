@@ -81,6 +81,9 @@ angular.module('services', []).factory('Prayers', function($firebaseArray) {
           friends[friend.id] = true;
         });
 
+        // Add the user to their own friends list
+        friends[user.id] = true;
+
         Friends.$ref().child(user.id).set(friends);
       }
 

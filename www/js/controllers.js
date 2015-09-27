@@ -17,22 +17,15 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
       timestamp: Firebase.ServerValue.TIMESTAMP,
       comments: {},
     }).then(function(ref) {
-      // This function will add the prayer request to the given user's feed
-      var addToFeed = function(userId) {
-        feedsRootRef.child(userId).child(ref.key()).set(true);
-      };
-
       // Add the prayer request to all of the user's friends' feeds
       var feedsRootRef = Feeds.$ref();
       var friendsRef = Friends.$ref().child($scope.user.id);
       friendsRef.once('value', function(snap) {
         snap.forEach(function(friend) {
-          addToFeed(friend.key());
+          var userId = friend.key();
+          feedsRootRef.child(userId).child(ref.key()).set(true);
         });
       });
-
-      // Add it to the user's own feed
-      addToFeed($scope.user.id);
     });
 
     // Clear the request in preparation for creating the next one
@@ -44,22 +37,15 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   prayersRef.on('child_removed', function(snap) {
     var prayerId = snap.key();
 
-    // This function will remove the prayer request from the given user's feed
-    var removeFromFeed = function(userId) {
-      feedsRootRef.child(userId).child(prayerId).remove();
-    };
-
     // Remove the prayer request from all of the user's friends' feeds
     var feedsRootRef = Feeds.$ref();
     var friendsRef = Friends.$ref().child($scope.user.id);
     friendsRef.once('value', function(snap) {
       snap.forEach(function(friend) {
-        removeFromFeed(friend.key());
+        var userId = friend.key();
+        feedsRootRef.child(userId).child(prayerId).remove();
       });
     });
-
-    // Remove it remove from the user's own feed
-    removeFromFeed($scope.user.id);
   });
 }).controller('PrayerCtrl', function($scope, $stateParams, $ionicModal, $firebaseArray, $firebaseObject, Prayers, Users, Friends, Feeds, User) {
   // Use the id contained in the current state to find the current prayer request
