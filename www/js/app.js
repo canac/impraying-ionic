@@ -11,14 +11,26 @@ angular.module('impraying', ['ionic', 'firebase', 'controllers', 'directives', '
     }
   });
 }).config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider.state('prayers', {
+  $stateProvider.state('tab', {
+    url: '',
+    abstract: true,
+    templateUrl: 'templates/tabs.html',
+  }).state('tab.prayers', {
     url: '/prayers',
-    templateUrl: 'templates/prayers.html',
-    controller: 'PrayersCtrl',
-  }).state('prayer', {
+    views: {
+      'tab-prayers': {
+        templateUrl: 'templates/prayers.html',
+        controller: 'PrayersCtrl',
+      },
+    },
+  }).state('tab.prayer', {
     url: '/prayers/:id',
-    templateUrl: 'templates/prayer.html',
-    controller: 'PrayerCtrl',
+    views: {
+      'tab-prayers': {
+        templateUrl: 'templates/prayer.html',
+        controller: 'PrayerCtrl',
+      },
+    },
   });
 
   // Fallback state when no other states are matched
