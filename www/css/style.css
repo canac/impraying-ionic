@@ -5,3 +5,7 @@
 .pull-right {
   float: right !important;
 }
+
+[nav-view-transition="ios"][nav-view-direction="forward"], [nav-view-transition="ios"][nav-view-direction="back"] {
+  background-color: transparent;
+}
