@@ -41,4 +41,30 @@ angular.module('directives', []).directive('prayerPreview', function() {
       };
     },
   };
+}).directive('notificationPreview', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      notification: '=notification',
+    },
+    templateUrl: 'templates/notification-preview.html',
+    controller: function($scope, $firebaseObject, Prayers, Users, User) {
+      $scope.user = User.getUser();
+
+      // Look up the notification's referenced prayer and comment
+      var prayerRef = Prayers.$ref().child($scope.notification.prayerId);
+      $scope.prayer = $firebaseObject(prayerRef);
+      var commentRef = prayerRef.child('comments').child($scope.notification.commentId);
+      $scope.comment = $firebaseObject(commentRef);
+      commentRef.once('value', function(snap) {
+        // Look up the comment's author
+        var authorRef = Users.$ref().child(snap.val().author);
+        $scope.author = $firebaseObject(authorRef);
+      });
+
+      $scope.destroyNotification = function(prayer) {
+        $scope.user.notifications.$remove($scope.notification);
+      };
+    },
+  };
 });

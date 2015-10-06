@@ -21,7 +21,7 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     // Clear the request in preparation for creating the next one
     this.request = '';
   };
-}).controller('PrayerCtrl', function($scope, $stateParams, $ionicModal, $firebaseArray, $firebaseObject, Prayers, Users, Friends, Feeds, User) {
+}).controller('PrayerCtrl', function($scope, $stateParams, $ionicModal, $firebaseArray, $firebaseObject, Prayers, Notifications, Users, Friends, Feeds, User) {
   // Use the id contained in the current state to find the current prayer request
   var prayerId = $stateParams.id;
   var prayerRef = Prayers.$ref().child(prayerId);
@@ -45,9 +45,23 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
       prayer: prayerId,
       content: this.comment,
       timestamp: Firebase.ServerValue.TIMESTAMP,
+    }).then(function(ref) {
+      if ($scope.user.id === $scope.prayer.author) {
+        // Do not notify when users comment on their own requests
+        return;
+      }
+
+      var notificationsRef = Notifications.$ref().child($scope.prayer.author);
+      var notifications = $firebaseArray(notificationsRef);
+      notifications.$add({
+        prayerId: prayerId,
+        commentId: ref.key(),
+      });
     });
+
     this.comment = '';
   };
-}).controller('NotificationsCtrl', function($scope) {
+}).controller('NotificationsCtrl', function($scope, User) {
   // Initialize the scope variables
+  $scope.user = User.getUser();
 });

@@ -36,6 +36,9 @@ angular.module('services', []).factory('Prayers', function($firebaseArray, Frien
   };
 
   return $firebaseArray(prayersRef);
+}).factory('Notifications', function($firebaseArray) {
+  var notificationsRef = new Firebase('https://im-praying.firebaseio.com/notifications');
+  return $firebaseArray(notificationsRef);
 }).factory('Users', function($firebaseArray) {
   var usersRef = new Firebase('https://im-praying.firebaseio.com/users');
   return $firebaseArray(usersRef);
@@ -45,7 +48,7 @@ angular.module('services', []).factory('Prayers', function($firebaseArray, Frien
 }).factory('Feeds', function($firebaseArray) {
   var feedsRef = new Firebase('https://im-praying.firebaseio.com/feeds');
   return $firebaseArray(feedsRef);
-}).service('User', function(ngFB, $q, $firebaseArray, Users, Friends, Feeds) {
+}).service('User', function(ngFB, $q, $firebaseArray, Notifications, Users, Friends, Feeds) {
   var User = {};
 
   // Authenticate with Facebook
@@ -85,6 +88,7 @@ angular.module('services', []).factory('Prayers', function($firebaseArray, Frien
       currentUser.name = null;
       currentUser.loggedIn = false;
       currentUser.feed = [];
+      currentUser.notifications = [];
     } else {
       currentUser.id = user.id;
       currentUser.name = user.name;
@@ -92,6 +96,9 @@ angular.module('services', []).factory('Prayers', function($firebaseArray, Frien
 
       var feedRef = Feeds.$ref().child(user.id);
       currentUser.feed = $firebaseArray(feedRef);
+
+      var notificationsRef = Notifications.$ref().child(user.id);
+      currentUser.notifications = $firebaseArray(notificationsRef);
     }
   };
 

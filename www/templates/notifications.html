@@ -1,3 +1,9 @@
 <ion-view view-title="Notifications">
-  <ion-content></ion-content>
+  <ion-content>
+    <ion-list>
+      <div class="item-remove-animate" ng-repeat="notification in user.notifications | orderBy:'-'">
+        <notification-preview data-notification="notification"></notification-preview>
+      </div>
+    </ion-list>
+  </ion-content>
 </ion-view>
