@@ -2,10 +2,15 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
   // Initalize the Facebook authentication module using LocalStorage instead of the default
   // SessionStorage for the token store to persist logins across sessions
   ngFB.init({ appId: 1641039379506767, tokenStore: window.localStorage });
+}).controller('RootCtrl', function($scope, User) {
+  $scope.user = User.getUser();
+
+  $scope.getNotificationCount = function() {
+    return $scope.user ? $scope.user.notifications.length : 0;
+  };
 }).controller('PrayersCtrl', function($scope, Prayers, Friends, Feeds, User) {
   // Initialize the scope variables
   $scope.request = '';
-  $scope.user = User.getUser();
   $scope.facebookLogin = User.login;
   $scope.facebookLogout = User.logout;
 
@@ -31,8 +36,6 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     var authorRef = Users.$ref().child(snap.val().author);
     $scope.author = $firebaseObject(authorRef);
   });
-
-  $scope.user = User.getUser();
 
   // Load the comments array
   var commentsRef = Prayers.$ref().child(prayerId).child('comments');
@@ -61,7 +64,5 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
 
     this.comment = '';
   };
-}).controller('NotificationsCtrl', function($scope, User) {
-  // Initialize the scope variables
-  $scope.user = User.getUser();
+}).controller('NotificationsCtrl', function($scope) {
 });
