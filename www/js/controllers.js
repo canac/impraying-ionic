@@ -48,4 +48,6 @@ angular.module('controllers', ['angularMoment', 'ngOpenFB']).run(function($ionic
     });
     this.comment = '';
   };
+}).controller('NotificationsCtrl', function($scope) {
+  // Initialize the scope variables
 });

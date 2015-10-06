@@ -31,6 +31,14 @@ angular.module('impraying', ['ionic', 'firebase', 'controllers', 'directives', '
         controller: 'PrayerCtrl',
       },
     },
+  }).state('tab.notifications', {
+    url: '/notifications',
+    views: {
+      'tab-notifications': {
+        templateUrl: 'templates/notifications.html',
+        controller: 'NotificationsCtrl',
+      },
+    },
   });
 
   // Fallback state when no other states are matched
