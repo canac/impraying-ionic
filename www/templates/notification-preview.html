@@ -1,7 +1,7 @@
 <ion-item class="item-avatar item-icon-right item-text-wrap" ng-click="openNotification()">
   <img ng-src="http://graph.facebook.com/{{prayer.author}}/picture" />
   <h2>{{author.name}} commented on your request</h2>
-  <p am-time-ago="comment.timestamp"></p>
+  <p>{{comment.content}}</p>
   <i class="icon ion-chevron-right icon-accessory"></i>
   <ion-option-button class="button-assertive" ng-click="destroyNotification()"><i class="icon ion-trash-b"></i></ion-option-button>
 </ion-item>
