@@ -48,7 +48,7 @@ angular.module('directives', []).directive('prayerPreview', function() {
       notification: '=notification',
     },
     templateUrl: 'templates/notification-preview.html',
-    controller: function($scope, $firebaseObject, Prayers, Users, User) {
+    controller: function($scope, $state, $firebaseObject, Prayers, Users, User) {
       $scope.user = User.getUser();
 
       // Look up the notification's referenced prayer and comment
@@ -64,6 +64,13 @@ angular.module('directives', []).directive('prayerPreview', function() {
 
       $scope.destroyNotification = function(prayer) {
         $scope.user.notifications.$remove($scope.notification);
+      };
+
+      $scope.openNotification = function() {
+        $state.go('tab.notification', { id: $scope.notification.prayerId });
+
+        // Remove the notification since it has been read
+        $scope.destroyNotification();
       };
     },
   };
