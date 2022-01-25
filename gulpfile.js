@@ -1,10 +1,11 @@
 var gulp = require('gulp');
-var gutil = require('gulp-util');
 var bower = require('bower');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass')(require('sass'));
 var cleanCss = require('gulp-clean-css');
 var rename = require('gulp-rename');
+var colors = require('ansi-colors');
+var log = require('fancy-log');
 var sh = require('shelljs');
 
 var paths = {
@@ -32,10 +33,10 @@ gulp.task('watch', function() {
 gulp.task('git-check', function(done) {
   if (!sh.which('git')) {
     console.log(
-      '  ' + gutil.colors.red('Git is not installed.'),
+      '  ' + colors.red('Git is not installed.'),
       '\n  Git, the version control system, is required to download Ionic.',
-      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
+      '\n  Download git here:', colors.cyan('http://git-scm.com/downloads') + '.',
+      '\n  Once git is installed, run \'' + colors.cyan('gulp install') + '\' again.'
     );
     process.exit(1);
   }
@@ -45,7 +46,7 @@ gulp.task('git-check', function(done) {
 gulp.task('install',  gulp.series(['git-check'], function() {
   return bower.commands.install()
     .on('log', function(data) {
-      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
+      log('bower', colors.cyan(data.id), data.message);
     });
 }));
 
